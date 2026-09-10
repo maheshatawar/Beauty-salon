@@ -43,8 +43,6 @@ function App() {
       notes: '',
     }
     try {
-      formData.append('form-name', 'booking')
-      formData.append('bot-field', '')
       await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(formData).toString() })
       const existingBookings = JSON.parse(localStorage.getItem('luma-bookings') || '[]')
       localStorage.setItem('luma-bookings', JSON.stringify([...existingBookings, booking]))
