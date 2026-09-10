@@ -32,7 +32,8 @@ function App() {
   const handleBookingSubmit = async (event) => {
     event.preventDefault()
     setBookingStatus('submitting')
-    const formData = new FormData(event.currentTarget)
+    const form = event.currentTarget
+    const formData = new FormData(form)
     const booking = {
       booking_id: `B${Date.now()}`,
       created_at: new Date().toISOString(),
@@ -54,7 +55,7 @@ function App() {
       } catch {
       }
       setBookingStatus('submitted')
-      event.currentTarget.reset()
+      form.reset()
     } catch (error) {
       setBookingStatus(error instanceof Error ? error.message : 'We could not send that request. Please try again.')
     }
