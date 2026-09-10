@@ -32,6 +32,6 @@ Deploy this project to Netlify using **Add new site > Import an existing project
 
 The included `netlify.toml` already contains these settings. Netlify Forms detects the `booking` form during deployment. Submitted bookings are stored in the Netlify dashboard under **Site configuration > Forms**, where they can be reviewed or exported as CSV for Excel.
 
-The booking form also saves a browser backup and provides a **Download bookings CSV** button. CSV files open directly in Microsoft Excel. Netlify also provides CSV export from the Forms dashboard.
+Netlify stores each booking centrally and provides CSV export from the Forms dashboard.
 
 GitHub Pages remains available for the static version, but Netlify is required for the central form submission storage.
