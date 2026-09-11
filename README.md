@@ -23,15 +23,6 @@ For a project repository, the site will be available at:
 
 The Vite config uses a relative asset base, so the same build works at both a project URL and a custom domain.
 
-## Netlify deployment and bookings
+## Booking data
 
-Deploy this project to Netlify using **Add new site > Import an existing project**, select the GitHub repository, and use these settings:
-
-- Build command: `npm run build`
-- Publish directory: `dist`
-
-The included `netlify.toml` already contains these settings. Netlify Forms detects the `booking` form during deployment. Submitted bookings are stored in the Netlify dashboard under **Site configuration > Forms**, where they can be reviewed or exported as CSV for Excel.
-
-Netlify stores each booking centrally and provides CSV export from the Forms dashboard.
-
-GitHub Pages remains available for the static version, but Netlify is required for the central form submission storage.
+The booking form saves appointment requests in the current browser using `localStorage`. The detached GitHub Pages version does not send data to Netlify or any other external service. Clearing browser data or using another device will not show the saved requests.

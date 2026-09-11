@@ -32,7 +32,7 @@ function App() {
     setIsBookingOpen(true)
   }
 
-  const handleBookingSubmit = async (event) => {
+  const handleBookingSubmit = (event) => {
     event.preventDefault()
     setBookingStatus('submitting')
     const form = event.currentTarget
@@ -46,22 +46,10 @@ function App() {
       status: 'New',
       notes: '',
     }
-    try {
-      const isLocalPreview = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-      if (!isLocalPreview) {
-        const response = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(formData).toString() })
-        if (!response.ok && response.status !== 0) throw new Error(`Netlify returned ${response.status}`)
-      }
-      try {
-        const existingBookings = JSON.parse(localStorage.getItem('luma-bookings') || '[]')
-        localStorage.setItem('luma-bookings', JSON.stringify([...existingBookings, booking]))
-      } catch {
-      }
-      setBookingStatus('submitted')
-      form.reset()
-    } catch (error) {
-      setBookingStatus(error instanceof Error ? error.message : 'We could not send that request. Please try again.')
-    }
+    const existingBookings = JSON.parse(localStorage.getItem('luma-bookings') || '[]')
+    localStorage.setItem('luma-bookings', JSON.stringify([...existingBookings, booking]))
+    setBookingStatus('submitted')
+    form.reset()
   }
 
 
@@ -77,7 +65,7 @@ function App() {
       <section className="services-section" id="services"><div className="section-heading"><div><p className="eyebrow">The menu</p><h2>Choose your <i>ritual.</i></h2></div><p className="section-description">Small luxuries, thoughtful details, and a result that still feels like you.</p></div><div className="category-tabs" role="tablist" aria-label="Service categories">{categories.map((category) => <button className={activeCategory === category ? 'category-tab active' : 'category-tab'} type="button" role="tab" aria-selected={activeCategory === category} key={category} onClick={() => setActiveCategory(category)}>{category}</button>)}</div><div className="service-grid">{filteredServices.map((service, index) => <article className={service.featured ? 'service-card featured' : 'service-card'} key={service.name}>{service.featured && <span className="popular-tag">A Luma favorite</span>}<span className="service-number">0{index + 1}</span><div className="service-card-body"><p className="service-category">{service.category}</p><h3>{service.name}</h3><p className="service-description">{service.description}</p><div className="service-meta"><span><Clock3 size={15} /> {service.duration}</span><strong>{service.price}</strong></div></div><button className="service-arrow" type="button" aria-label={`Book ${service.name}`} onClick={() => setIsBookingOpen(true)}><ArrowRight size={18} /></button></article>)}</div></section>
         <section className="visit-section" id="visit"><div><p className="eyebrow">Your next appointment</p><h2>Make a little room<br />for <i>yourself.</i></h2></div><div className="visit-action"><p>We keep our days intentionally spacious. That means fewer appointments, more attention, and time to get it right.</p></div></section>
       <footer className="site-footer"><span>© 2024 Luma & Co.</span><span>114 E 7th Street, New York</span><a href="#instagram"><Camera size={17} /> @lumaandco</a></footer>
-      {isBookingOpen && <div className="modal-backdrop" role="presentation" onClick={() => setIsBookingOpen(false)}><div className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" type="button" aria-label="Close booking form" onClick={() => setIsBookingOpen(false)}><X size={20} /></button><p className="eyebrow">Start your ritual</p>{bookingStatus === 'submitted' ? <><h2 id="booking-title">Request <i>received.</i></h2><p className="modal-copy">{['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'Local preview mode: this request is saved in this browser only.' : 'Your request has been sent to the studio and is available in the Netlify Forms dashboard.'}</p><div className="booking-success"><Check size={17} /> Request saved</div></> : <><h2 id="booking-title">Find your <i>time.</i></h2><p className="modal-copy">Leave us a few details and our studio team will be in touch with available times.</p>{bookingStatus !== 'idle' && bookingStatus !== 'submitting' && <p className="booking-error">{bookingStatus}</p>}<form name="booking" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={handleBookingSubmit}><input type="hidden" name="form-name" value="booking" /><p className="hidden-field"><label>Do not fill this out<input name="bot-field" /></label></p><label>Name<input name="customer_name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@email.com" required /></label><label>What are you in for?<div className="select-wrap"><select name="service_name" defaultValue="" required><option value="" disabled>Choose a service</option>{services.map((service) => <option key={service.name}>{service.name}</option>)}</select><ChevronDown size={17} /></div></label><button className="button button-dark modal-submit" type="submit" disabled={bookingStatus === 'submitting'}>{bookingStatus === 'submitting' ? 'Sending request...' : 'Request an appointment'} {bookingStatus !== 'submitting' && <Check size={17} />}</button></form></>}</div></div>}
+      {isBookingOpen && <div className="modal-backdrop" role="presentation" onClick={() => setIsBookingOpen(false)}><div className="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" type="button" aria-label="Close booking form" onClick={() => setIsBookingOpen(false)}><X size={20} /></button><p className="eyebrow">Start your ritual</p>{bookingStatus === 'submitted' ? <><h2 id="booking-title">Request <i>received.</i></h2><p className="modal-copy">Your request is saved in this browser. This GitHub Pages version does not send data to an external service.</p><div className="booking-success"><Check size={17} /> Request saved</div></> : <><h2 id="booking-title">Find your <i>time.</i></h2><p className="modal-copy">Leave us a few details and your request will be saved in this browser.</p><form name="booking" onSubmit={handleBookingSubmit}><label>Name<input name="customer_name" type="text" placeholder="Your name" required /></label><label>Email<input name="email" type="email" placeholder="you@email.com" required /></label><label>What are you in for?<div className="select-wrap"><select name="service_name" defaultValue="" required><option value="" disabled>Choose a service</option>{services.map((service) => <option key={service.name}>{service.name}</option>)}</select><ChevronDown size={17} /></div></label><button className="button button-dark modal-submit" type="submit">Save appointment request <Check size={17} /></button></form></>}</div></div>}
     </main>
   )
 }
